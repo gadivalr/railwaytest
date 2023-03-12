@@ -23,7 +23,7 @@ ssl=True
 db = SQLAlchemy(app)
 app.secret_key="clave_secreta"
 url = 'https://us-east.connect.psdb.cloud'
-response = requests.get(url, verify='ssl\cacert.pem')
+response = requests.get(url, verify='cert.pem')
 
 with app.app_context():
     class Post(db.Model):
