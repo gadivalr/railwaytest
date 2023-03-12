@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulario Responsive</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+<style>
+    .container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 0 15px;
+}
+
+@media screen and (min-width: 576px) {
+  .container {
+    width: 540px;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .container {
+    width: 720px;
+  }
+}
+
+@media screen and (min-width: 992px) {
+  .container {
+    width: 960px;
+  }
+}
+
+@media screen and (min-width: 1200px) {
+  .container {
+    width: 1140px;
+  }
+}
+
+</style>
+</head>
+<body>
+
+    <div class="container">
+        <h1 class="text-center mb-5">Datos Post</h1>
+        <form action="/admin/post/guardar" method="post" enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="txtNombre" class="form-label">Titulo:</label>
+                          <input type="txt"
+                            class="form-control" name="txtNombre" id="txtNombre" aria-describedby="helpId" placeholder="escriba nombre libro">
+            </div>
+            <div class="form-group">
+                <label for="txtFecha" class="form-label">Fecha:</label>
+                <input type="text"
+                  class="form-control" name="txtFecha" id="txtFecha" aria-describedby="helpId" placeholder="escriba fecha">
+            </div>
+            <div class="form-group">
+                <label for="txtTag" class="form-label">Tag:</label>
+                <input type="text"
+                  class="form-control" name="txtTag" id="txtTag" aria-describedby="helpId" placeholder="escriba fecha">
+            </div>
+            <div class="form-group">
+                <label for="txtDescripcion" class="form-label">Descripcion:</label>
+                <input type="text"
+                  class="form-control" name="txtDescripcion" id="txtDescripcion" aria-describedby="helpId" placeholder="escriba descripcion"> 
+            </div>
+            <div class="form-group">
+                <input type="text"
+                class="form-control" name="txtImagen" id="txtImagen" aria-describedby="helpId" placeholder="Seleccione la imagen">
+            <div class="form-group">
+                <div class="mb-3">
+                  <label for="txtContenido" class="form-label">Contenido</label>
+                  <textarea class="form-control" name="txtContenido" id="txtContenido" rows="3"></textarea>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary">Enviar</button>
+        </form>
+    </div>
+    <div class="  col-md-12">
+        <div class="table-responsive">
+            <table class="table table-primary">
+                <thead>
+                    <tr>
+                        <th scope="col">ID</th>
+                        <th scope="col">Nombre</th>
+                        <th scope="col">Imagen</th>
+                        <th scope="col">Acciones</th>
+                        
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for posts in posts %}
+                    <tr >
+                        <td scope="row">{{ posts[0] }}</td>
+                        <td>{{ posts[1] }}</td>
+                        <td> 
+                           <img width="60" src="{{posts[4]}}" class="img-fluid rounded-top" alt="">
+                           {{posts[4]}}
+                        </td>
+
+                        <td>
+                            <form action="/admin/post/delete" method="post">
+                                <input value= {{ posts[0] }} type="hidden" name="txtID" id="txtID">
+                                <button type="submit" class="btn btn-danger">Delete</button>
+                            </form>
+                        </td>
+                        
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        
+        
+    </div>
+    
+</div>
+</div>
+<script src="https://cdn.tiny.cloud/1/8dfznr8cobua1wqxn5fjcwawaqavuqnu1d1qcihrfzg80qma/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+<script>
+    tinymce.init({
+    forced_root_block : "",
+    selector: "textarea"
+
+});
+    
+</script>
+
+</body>
+</html>
+
