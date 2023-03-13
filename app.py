@@ -13,9 +13,19 @@ import urllib.parse, hashlib
 import requests  
 from io import BytesIO
 from PIL import Image
+import cloudinary
+import cloudinary.uploader
+import cloudinary.api
+
 
 
 app = Flask(__name__)
+cloudinary.config(
+  cloud_name = "dacwrjdao",
+  api_key = "929543513912788",
+  api_secret = "eFlFzOxMUJHm6xs3FfbnNyVPtXk",
+  secure = True
+)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://ujnwugpgvon3etap:gGyiBlcBrNBPRsU0doOd@bs2dpuyw1atuftpcyqku-mysql.services.clever-cloud.com:3306/bs2dpuyw1atuftpcyqku'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SSL'] = True
@@ -33,6 +43,7 @@ with app.app_context():
         imagen= db.Column(db.String(255), nullable=False)
         contenido = db.Column(db.Text, nullable=False)
         tag = db.Column(db.String(255), nullable=False)
+        nombre_imagen = db.Column(db.String(255), nullable=False)
     
     db.create_all()
 
@@ -121,7 +132,7 @@ def admin_post_guardar():
 
     titulo = request.form['txtNombre']
     fecha = request.form['txtFecha']
-    imagen = request.form['txtImagen']
+    imagen = request.files['txtImagen']
     descripcion = request.form['txtDescripcion']
     contenido = request.form['txtContenido']
     tags = request.form['txtTag']
@@ -136,13 +147,16 @@ def admin_post_guardar():
         return texto
 
     contenido_limpio = limpiar_texto(contenido)
+    resultado = cloudinary.uploader.upload(imagen)
+    nuevaUrlImagen = resultado['secure_url']
+    nombre_imagen = resultado['public_id']
 
 
 
     # Crear un objeto Post con los datos del formulario
     post = Post(nombre=titulo, fecha=fecha, descripcion=descripcion,
-                 imagen=imagen,
-                contenido=contenido_limpio, tag=tags)
+                 imagen=nuevaUrlImagen,
+                contenido=contenido_limpio, tag=tags, nombre_imagen=nombre_imagen)
 
     # Guardar el objeto Post en la base de datos
     db.session.add(post)
@@ -159,12 +173,12 @@ def admin_post_delete():
     
     # Obtener el nombre de la imagen del post a eliminar
     post = Post.query.filter_by(id=id).first()
-    nombre_imagen = post.imagen
+    nombre_imagen = post.nombre_imagen
     
     # Eliminar la imagen del post
    # if os.path.exists("templates/sitio/img/" + nombre_imagen):
     #os.unlink("templates/sitio/img/" + nombre_imagen)
-    
+    cloudinary.uploader.destroy(nombre_imagen, invalidate=True)
     # Eliminar el post de la base de datos
     Post.query.filter_by(id=id).delete()
     db.session.commit()
@@ -178,7 +192,7 @@ def blog(nombre):
     posts = []
     for post in quary:
         posts.append((post.id,post.nombre, post.fecha, post.descripcion, post.imagen, post.contenido, post.tag))
-    return render_template('sitio/blog2.html',posts=posts)
+    return render_template('sitio/blog.html',posts=posts)
 
 if __name__ == '__main__':
     app.run(debug=True)
