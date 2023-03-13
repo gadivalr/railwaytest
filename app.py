@@ -16,7 +16,7 @@ from PIL import Image
 
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:9KG6GRD3G0PU4eAeR3yg@containers-us-west-138.railway.app:6123/railway'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://ujnwugpgvon3etap:gGyiBlcBrNBPRsU0doOd@bs2dpuyw1atuftpcyqku-mysql.services.clever-cloud.com:3306/bs2dpuyw1atuftpcyqku'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SSL'] = True
 ssl=True
